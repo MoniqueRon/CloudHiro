@@ -103,12 +103,6 @@ def read_all_data():
     print('oi', data)
     return jsonify(data)
 
-@app.route('/data/<int:id>', methods=['GET'])
-def read_data_by_id(id):
-    query = f"SELECT * FROM {table_name} WHERE id={id}"
-    data = execute_query(query)
-    return jsonify(data)
-
 
 # Update data
 @app.route('/data/<int:id>', methods=['PUT'])
