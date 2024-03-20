@@ -71,6 +71,8 @@ def init_db():
         
                         cur = conn.cursor()
                         cur.copy_expert(f"COPY {table_name} FROM STDIN WITH CSV HEADER", f)
+                        # add auto increment primary key id to the table
+                        cur.execute(f"ALTER TABLE {table_name} ADD COLUMN id SERIAL PRIMARY KEY")
                         conn.commit()
                         print(f"{table_name} uploaded to PostgreSQL successfully")
     except Exception as error:
@@ -98,9 +100,14 @@ def create_data():
 # Read data
 @app.route('/data', methods=['GET'])
 def read_all_data():
-    query = f"SELECT * FROM {table_name} LIMIT 100"
+    query = f"SELECT * FROM {table_name} LIMIT 50"
     data = execute_query(query)
-    print('oi', data)
+    return jsonify(data)
+
+@app.route('/data/<int:id>', methods=['GET'])
+def read_data_by_id(id):
+    query = f"SELECT * FROM {table_name} WHERE id={id}"
+    data = execute_query(query)
     return jsonify(data)
 
 
